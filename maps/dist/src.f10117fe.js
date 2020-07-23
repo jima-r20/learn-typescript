@@ -85164,7 +85164,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.CustomMap = void 0; // 他の人がindex.tsからGoogle Mapを色々と操作しないように
-// CustomMap.tsとしてブラックボックス化する
+// CustomMapとしてブラックボックス化する
 
 var CustomMap =
 /** @class */
@@ -85179,23 +85179,21 @@ function () {
     });
   }
 
-  CustomMap.prototype.addUserMarker = function (user) {
-    new google.maps.Marker({
+  CustomMap.prototype.addMarker = function (mappable) {
+    var _this = this;
+
+    var marker = new google.maps.Marker({
       map: this.googleMap,
       position: {
-        lat: user.location.lat,
-        lng: user.location.lng
+        lat: mappable.location.lat,
+        lng: mappable.location.lng
       }
     });
-  };
-
-  CustomMap.prototype.addCompanyMarker = function (company) {
-    new google.maps.Marker({
-      map: this.googleMap,
-      position: {
-        lat: company.location.lat,
-        lng: company.location.lng
-      }
+    marker.addListener('click', function () {
+      var infoWindow = new google.maps.InfoWindow({
+        content: 'Hi there!'
+      });
+      infoWindow.open(_this.googleMap, marker);
     });
   };
 
@@ -85219,8 +85217,8 @@ var CustomMap_1 = require("./CustomMap");
 var user = new User_1.User();
 var company = new Company_1.Company();
 var customMap = new CustomMap_1.CustomMap('map');
-customMap.addUserMarker(user);
-customMap.addCompanyMarker(company);
+customMap.addMarker(user);
+customMap.addMarker(company);
 },{"./User":"src/User.ts","./Company":"src/Company.ts","./CustomMap":"src/CustomMap.ts"}],"../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

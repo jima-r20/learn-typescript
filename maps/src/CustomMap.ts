@@ -1,8 +1,14 @@
-import { User } from './User';
-import { Company } from './Company';
+// Instruction to every other class
+// on how they can be an arguments to 'addMarker'
+interface Mappable {
+  location: {
+    lat: number;
+    lng: number;
+  };
+}
 
 // 他の人がindex.tsからGoogle Mapを色々と操作しないように
-// CustomMap.tsとしてブラックボックス化する
+// CustomMapとしてブラックボックス化する
 export class CustomMap {
   // 修飾子をprivateにすることで外部から呼び出されないようにする
   private googleMap: google.maps.Map;
@@ -17,23 +23,21 @@ export class CustomMap {
     });
   }
 
-  addUserMarker(user: User): void {
-    new google.maps.Marker({
+  addMarker(mappable: Mappable): void {
+    const marker = new google.maps.Marker({
       map: this.googleMap,
       position: {
-        lat: user.location.lat,
-        lng: user.location.lng,
+        lat: mappable.location.lat,
+        lng: mappable.location.lng,
       },
     });
-  }
 
-  addCompanyMarker(company: Company): void {
-    new google.maps.Marker({
-      map: this.googleMap,
-      position: {
-        lat: company.location.lat,
-        lng: company.location.lng,
-      },
+    marker.addListener('click', () => {
+      const infoWindow = new google.maps.InfoWindow({
+        content: 'Hi there!',
+      });
+
+      infoWindow.open(this.googleMap, marker);
     });
   }
 }
